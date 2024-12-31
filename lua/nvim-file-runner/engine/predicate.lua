@@ -1,6 +1,7 @@
 local utils = require("nvim-file-runner.utils")
+local Inventory = require("nvim-file-runner.inventory")
 
-local M = { inventory = {} }
+local M = { inventory = Inventory.new("Predicate") }
 
 M.__index = M
 

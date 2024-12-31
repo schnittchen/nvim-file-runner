@@ -1,7 +1,8 @@
 local utils = require("nvim-file-runner.utils")
 local ValueProvider = require("nvim-file-runner.engine.value_provider")
+local Inventory = require("nvim-file-runner.inventory")
 
-local M = { inventory = {} }
+local M = { inventory = Inventory.new("Effect") }
 
 M.__index = M
 

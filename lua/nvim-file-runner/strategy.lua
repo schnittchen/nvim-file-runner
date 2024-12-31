@@ -1,4 +1,6 @@
-local M = {inventory = {}}
+local Inventory = require("nvim-file-runner.inventory")
+
+local M = {inventory = Inventory.new("Strategy")}
 M.__index = M
 
 function M:new(tbl)
