@@ -36,11 +36,14 @@ local compute_cmd_result = function(pipe, cwd, strategy)
 end
 
 describe('from_pipe', function()
-  it('returns nil when cmd_template missing', function()
+  it('errors when cmd_template missing', function()
     local pipe = {}
-    local result = from_pipe_result(pipe)
 
-    MiniTest.expect.equality(result, nil)
+    local p1, p2 = pcall(function()
+      return from_pipe_result(pipe)
+    end)
+    MiniTest.expect.equality(p1, false)
+    MiniTest.expect.equality(not not p2.handle, true)
   end)
 
   it('returns expected result in minimal setup example', function()

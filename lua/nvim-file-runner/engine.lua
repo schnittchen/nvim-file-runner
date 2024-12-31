@@ -1,5 +1,6 @@
 local utils = require("nvim-file-runner.utils")
 local Execution = require("nvim-file-runner.execution")
+local Error = require("nvim-file-runner.error")
 
 local M = {}
 
@@ -78,9 +79,7 @@ M.get_execution = function(file_path, filetype, mode, requirements, ruleset)
     execution = Execution.saved[pipe.saved_execution]
 
     if not execution then
-      -- XXX not visible when any print is following!
-      utils.complain("cannot retrieve execution: " .. vim.inspect(pipe.saved_execution))
-      return
+      Error.with_user_message("no saved execution found for " .. vim.inspect(pipe.saved_execution))
     end
   else
     execution = Execution.from_pipe(pipe)

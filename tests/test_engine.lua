@@ -177,16 +177,17 @@ end
 
 T['get_execution'] = MiniTest.new_set()
 
-T['get_execution']['returns nil if not sufficient data for execution'] = function()
+T['get_execution']['errors if not sufficient data for execution'] = function()
   local set = RuleSet.new()
   set:declare_set("name", {})
 
   local initial_pipe = Engine.start_pipe("./file", "initial", "lua")
 
-  MiniTest.expect.equality(
-    Engine.get_execution("./file", "text", "mode", {}, set),
-    nil
-  )
+  local p1, p2 = pcall(function()
+    return Engine.get_execution("./file", "text", "mode", {}, set)
+  end)
+  MiniTest.expect.equality(p1, false)
+  MiniTest.expect.equality(not not p2.handle, true)
 end
 
 T['get_execution']['returns execution based on piped data; saves on demand'] = function()
@@ -231,8 +232,12 @@ T['get_execution']['retrieves execution on demand'] = function()
 
   Execution.saved.key = nil -- reset state
 
-  local execution = Engine.get_execution("/etc/passwd", "text", "mode", requirements, set)
-  MiniTest.expect.equality(execution, nil)
+  local p1, p2 = pcall(function()
+    return Engine.get_execution("/etc/passwd", "text", "mode", requirements, set)
+  end)
+  -- no execution found, errors:
+  MiniTest.expect.equality(p1, false)
+  MiniTest.expect.equality(not not p2.handle, true)
 
   local saved = {}
   Execution.saved.key = saved

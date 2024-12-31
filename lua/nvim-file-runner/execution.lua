@@ -2,6 +2,7 @@ local Path = require("pathlib")
 
 local utils = require("nvim-file-runner.utils")
 local Strategy = require("nvim-file-runner.strategy")
+local Error = require("nvim-file-runner.error")
 
 local M = {saved = {}}
 
@@ -9,8 +10,7 @@ M.__index = M
 
 function M.from_pipe(pipe)
   if not pipe.cmd_template then
-    utils.complain("no file command could be determined")
-    return
+    Error.with_user_message("no file command could be determined")
   end
 
   local self = setmetatable({}, M)

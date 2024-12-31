@@ -40,11 +40,14 @@ function M.run(mode)
 
   local filetype = vim.o.filetype
 
-  local execution = Engine.get_execution(file_path, filetype, mode, M.requirements, ruleset)
-
-  if execution then
-    execution:perform()
-  end
+  utils.may_fail(
+    function()
+      return Engine.get_execution(file_path, filetype, mode, M.requirements, ruleset)
+    end,
+    function(execution)
+      execution:perform()
+    end
+  )
 end
 
 function M.setup()

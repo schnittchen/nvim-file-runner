@@ -112,11 +112,26 @@ function M.path_with_root(path, root)
   end
 end
 
--- message must be one line and not contain anything fancy:
-function M.complain(message)
-  vim.cmd.echohl("WarningMsg")
-  vim.cmd.echo("'" .. message .. "'")
-  vim.cmd.echohl("None")
+function M.may_fail(fun, on_success, on_error)
+  local status, other = pcall(fun)
+
+  if status then
+    return on_success(other)
+  else
+    if other.handle then
+      other:handle()
+
+      if not on_error then
+        on_error = function() end
+      end
+
+      return on_error(other)
+    else
+      on_error = on_error or error
+
+      return on_error(other)
+    end
+  end
 end
 
 return M
